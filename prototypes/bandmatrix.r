@@ -12,7 +12,7 @@ bandmatrix <- function(soundwave, numBands=16, windowLength=1024, windowEasing=1
   numFourierBands <- floor(windowLength / 2)
   window <- tukeyWindow(windowLength, windowEasing)
   logScalingVector <- numBands * log(1:numFourierBands, 2) / log(numFourierBands, 2)
-  cumulativeBandWidths <- vapply(1:numBands, function(bandNumber) { length(which(logScalingVector <= bandNumber)) }, 0)
+  cumulativeBandwidths <- vapply(1:numBands, function(bandNumber) { length(which(logScalingVector <= bandNumber)) }, 0)
   numWindows <- floor((soundwaveLength - windowEasing) / (windowLength - windowEasing))
   meanEnergies <- matrix(0, nrow=numWindows, ncol=numBands)
   times <- numeric(numWindows)
@@ -24,7 +24,7 @@ bandmatrix <- function(soundwave, numBands=16, windowLength=1024, windowEasing=1
     energies <- Mod(fft(soundwave[(pos - windowLength + 1):pos] * window)[2:(numFourierBands + 1)])
     start <- 1
     for (j in 1:numBands) {
-      end <- cumulativeBandWidths[j]
+      end <- cumulativeBandwidths[j]
       if (start <= end) {
         meanEnergies[i,numBands - j + 1] <- mean(energies[start:end])
       }
@@ -36,7 +36,7 @@ bandmatrix <- function(soundwave, numBands=16, windowLength=1024, windowEasing=1
 
   output <- list()
   output$energies <- meanEnergies
-  output$frequencies <- sampleRate * rev(cumulativeBandWidths) / windowLength
+  output$frequencies <- sampleRate * rev(cumulativeBandwidths) / windowLength
   output$times <- times
 
   output
