@@ -10,7 +10,7 @@ graph <- function(...) {
   title(main='oscillograph')
   data <- bandmatrix(soundwave, ...)
   par(mar=c(5, 5, 5, 5))
-  heatgraph(data$energies, round(data$times, 3), round(data$frequencies))
+  heatgraph(data$energies, round(data$times, 3), round(data$frequencies, 2))
   title(main='spectrograph', xlab='time', ylab='frequency')
 }
 
