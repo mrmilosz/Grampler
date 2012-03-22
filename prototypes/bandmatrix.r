@@ -20,13 +20,13 @@ bandmatrix <- function(soundwave, numBands=16, windowLength=1024, windowEasing=1
   i <- 1
   pos <- windowLength
   while (pos <= soundwaveLength) {
-    times[i] <- (pos - windowLength) / sampleRate
+    times[i] <- (pos - windowEasing) / sampleRate
     energies <- Mod(fft(soundwave[(pos - windowLength + 1):pos] * window)[2:(numFourierBands + 1)])
     start <- 1
     for (j in 1:numBands) {
       end <- cumulativeBandwidths[j]
       if (start <= end) {
-        meanEnergies[i,numBands - j + 1] <- mean(energies[start:end])
+        meanEnergies[i,j] <- mean(energies[start:end])
       }
       start <- end + 1
     }
@@ -36,7 +36,7 @@ bandmatrix <- function(soundwave, numBands=16, windowLength=1024, windowEasing=1
 
   output <- list()
   output$energies <- meanEnergies
-  output$frequencies <- sampleRate * rev(cumulativeBandwidths) / windowLength
+  output$frequencies <- sampleRate * (cumulativeBandwidths) / windowLength
   output$times <- times
 
   output

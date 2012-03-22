@@ -1,3 +1,7 @@
+toPcm <- function(wave, bitDepth=16) {
+  floor(wave * (2^bitDepth - 0.5))
+}
+
 wave.snare <- function(samples=22050) {
   wave <- rnorm(1:samples)
   waveFadeFactor <- 10
