@@ -1,5 +1,6 @@
-source('bandmatrix.r');
+source('wavemanip.r');
 source('wavebank.r');
+source('bandmatrix.r');
 source('heatgraph.r');
 
 soundwave <- NULL
