@@ -37,5 +37,6 @@ for (i in 1:numSamples) {
 print('Database is ready!')
 
 closestNeighbors <- function(path) {
-  vapply(sort(distances[which(samplePaths == path),], index.return=TRUE)$ix, function(i) { samplePaths[i] }, '')
+  sampleDistances <- distances[which(samplePaths == path),]
+  vapply(sort(sampleDistances, index.return=TRUE)$ix, function(i) { c(samplePaths[i], sampleDistances[i]) }, c('', 0))
 }
