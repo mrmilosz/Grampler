@@ -4,6 +4,7 @@ source('bandmatrix.r')
 source('heatgraph.r')
 
 # Settable
+sampleDirectory <- 'DrumSamples'
 numBands <- 11
 windowLength <- 260
 windowEasing <- 130
@@ -13,7 +14,6 @@ numSamples <- 22050
 numWindows <- floor((numSamples - windowEasing) / (windowLength - windowEasing))
 soundwaveLength <- numWindows * (windowLength - windowEasing) + windowEasing
 
-sampleDirectory <- 'DrumSamples/Tambourines'
 samplePaths <- list.files(sampleDirectory, pattern='wav$', recursive=TRUE)
 numSamples <- length(samplePaths)
 
