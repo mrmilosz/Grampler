@@ -7,10 +7,13 @@ tukeyWindow <- function(length, easing=floor(length/2)) {
   }, 0) }
 }
 
-bandmatrix <- function(soundwave, numBands=11, sampleRate=44100, windowLength=260, windowEasing=floor(windowLength/2)) {
+bandMatrix <- function(soundwave, numBands=11, sampleRate=44100, windowLength=260, windowEasing=floor(windowLength/2), numWindows=NULL) {
   soundwaveLength <- length(soundwave)
   window <- tukeyWindow(windowLength, windowEasing)
-  numWindows <- floor((soundwaveLength - windowEasing) / (windowLength - windowEasing))
+  if (is.null(numWindows)) {
+    numWindows <- floor((soundwaveLength - windowEasing) / (windowLength - windowEasing))
+  }
+  soundwaveLength <- min(soundwaveLength, numWindows * (windowLength - windowEasing))
 
   numFourierBands <- floor(windowLength / 2)
   expTicks <- numFourierBands * 2^(1:numBands) / 2^numBands
@@ -44,7 +47,7 @@ bandmatrix <- function(soundwave, numBands=11, sampleRate=44100, windowLength=26
 
   output <- list()
   output$energies <- bandEnergies
-  output$frequencies <- sampleRate * (expTicks) / windowLength
+  output$frequencies <- sampleRate * expTicks / windowLength
   output$times <- times
 
   output
