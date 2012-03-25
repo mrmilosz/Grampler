@@ -7,7 +7,7 @@ tukeyWindow <- function(length, easing=floor(length/2)) {
   }, 0) }
 }
 
-bandMatrix <- function(soundwave, numBands=11, sampleRate=44100, windowLength=260, windowEasing=floor(windowLength/2), numWindows=NULL) {
+bandMatrix <- function(soundwave, numBands=11, sampleRate=44100, windowLength=260, windowEasing=floor(windowLength/2), numWindows=NULL, normalize=FALSE) {
   soundwaveLength <- length(soundwave)
   window <- tukeyWindow(windowLength, windowEasing)
   if (is.null(numWindows)) {
@@ -39,6 +39,10 @@ bandMatrix <- function(soundwave, numBands=11, sampleRate=44100, windowLength=26
         }
         k <- k + 1
       }
+    }
+
+    if (normalize) {
+      bandEnergies[i,l] <- bandEnergies[i,l] / max(bandEnergies[i,l])
     }
 
     pos <- pos + windowLength - windowEasing
