@@ -28,14 +28,8 @@ wave.sineramp <- function(numSamples=22050, sampleRate=44100, f0=22050, f1=30, l
   cos(2 * pi * (freq * 1:numSamples + phase) / sampleRate)
 }
 
-wave.sinevibrato <- function(numSamples=22050, sampleRate=44100, f=440, amp=10, speed=8, log=TRUE) {
-  env <- cos(2 * pi * speed * 1:numSamples / numSamples)
-  if (log) {
-    freq <- f * (1 + amp / f) ^ env
-  }
-  else {
-    freq <- f + amp * env
-  }
+wave.sinevibrato <- function(numSamples=22050, sampleRate=44100, f=440, amp=0.5, speed=4) {
+  freq <- f * 2 ^ (amp * cos(2 * pi * speed * 1:numSamples / numSamples) / 12)
   phase <- numeric(numSamples)
   for (i in 2:numSamples) {
     phase[i] <- phase[i-1] + i * (freq[i-1] - freq[i])
@@ -43,12 +37,12 @@ wave.sinevibrato <- function(numSamples=22050, sampleRate=44100, f=440, amp=10, 
   cos(2 * pi * (freq * 1:numSamples + phase) / sampleRate)
 }
 
-wave.weirdsaw <- function(numSamples=88200, sampleRate=44100, f=440) {
+wave.weirdsaw <- function(numSamples=22050, sampleRate=44100, f=440, ampvar=0.3, speedvar=8) {
   wave <- numeric(numSamples)
   i <- 1
   h <- f
   while(2 * h < sampleRate) {
-    wave <- wave + wave.sinevibrato(numSamples=numSamples, sampleRate=sampleRate, f=h, amp=20*runif(1), speed=10*runif(1)) / i
+    wave <- wave + wave.sinevibrato(numSamples=numSamples, sampleRate=sampleRate, f=h, amp=runif(1)*ampvar, speed=runif(1)*speedvar) / i
     i <- i + 1
     h <- f * i
   }
