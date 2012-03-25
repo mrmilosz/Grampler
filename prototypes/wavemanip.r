@@ -1,11 +1,13 @@
+#
 # Convenience methods
+#
 
 readToFloat <- function(path, ...) {
   int16ToFloat(wavToInt16(readWav(path, ...)))
 }
 
-writeFromFloat <- function(wave, path, ...) {
-  writeWav(int16ToBytes(floatToInt16(wave)), path, ...)
+writeFromFloat <- function(path, wave, ...) {
+  writeWav(path, int16ToBytes(floatToInt16(wave)), ...)
 }
 
 #
@@ -164,13 +166,13 @@ wavToInt16 <- function(wav) {
 
 # float to int16
 floatToInt16 <- function(float) {
-  as.integer(floor(float * (2^(15) - 0.5)))
+  as.integer(floor(float * (2^15 - 0.5)))
 }
 
-writeWav <- function(bytes, path) {
+writeWav <- function(path, bytes) {
   bytesLength <- length(bytes)
   to.write <- file(path, 'wb')
-  writeBin(to.write, c(
+  writeBin(c(
     charToBytes('RIFF'),            # ChunkID       4
     int32ToBytes(36 + bytesLength), # ChunkSize     4
     charToBytes('WAVE'),            # Format        4
@@ -184,8 +186,8 @@ writeWav <- function(bytes, path) {
     int16ToBytes(16),               # BitsPerSample 2
     charToBytes('data'),            # Subchunk2ID   4
     int32ToBytes(bytesLength),      # Subchunk2Size 4
-    int16ToBytes(bytes)             # data          Subchunk2Size
-  ))
+    bytes                           # data          Subchunk2Size
+  ), to.write)
   close(to.write)
 }
 
@@ -201,5 +203,5 @@ int16ToBytes <- function(int16) {
 
 # int32 to little endian bytes
 int32ToBytes <- function(int32) {
-  as.raw(as.vector(vapply(int16, function(int) { if (int < 0) { int <- int + 4294967296 }; c(int %% 256, int %/% 256, int %/% 65536, int %/% 16777216) }, c(0, 0))))
+  as.vector(vapply(int32, function(int) { if (int < 0) { int <- int + 4294967296 }; int16ToBytes(c(int %% 65536, int %/% 65536)) }, as.raw(c(0, 0, 0, 0))))
 }
