@@ -25,16 +25,16 @@ wave.sineramp <- function(numSamples=22050, sampleRate=44100, f0=22050, f1=30, l
   for (i in 2:numSamples) {
     phase[i] <- phase[i-1] + i * (freq[i-1] - freq[i])
   }
-  cos(2 * pi * (freq * 1:numSamples + phase) / sampleRate)
+  sin(2 * pi * (freq * 1:numSamples + phase) / sampleRate)
 }
 
 wave.sinevibrato <- function(numSamples=22050, sampleRate=44100, f=440, amp=0.5, speed=4) {
-  freq <- f * 2 ^ (amp * cos(2 * pi * speed * 1:numSamples / numSamples) / 12)
+  freq <- f * 2 ^ (amp * sin(2 * pi * speed * 1:numSamples / numSamples) / 12)
   phase <- numeric(numSamples)
   for (i in 2:numSamples) {
     phase[i] <- phase[i-1] + i * (freq[i-1] - freq[i])
   }
-  cos(2 * pi * (freq * 1:numSamples + phase) / sampleRate)
+  sin(2 * pi * (freq * 1:numSamples + phase) / sampleRate)
 }
 
 wave.weirdsaw <- function(numSamples=22050, sampleRate=44100, f=440, ampvar=0.3, speedvar=8) {
@@ -43,6 +43,30 @@ wave.weirdsaw <- function(numSamples=22050, sampleRate=44100, f=440, ampvar=0.3,
   h <- f
   while(2 * h < sampleRate) {
     wave <- wave + wave.sinevibrato(numSamples=numSamples, sampleRate=sampleRate, f=h, amp=runif(1)*ampvar, speed=runif(1)*speedvar) / i
+    i <- i + 1
+    h <- f * i
+  }
+  wave / max(abs(wave))
+}
+
+wave.weirdsaw2 <- function(numSamples=22050, sampleRate=44100, f=440, ampvar=0.35, amperror=0.15, speedvar=2, speederror=1) {
+  wave <- numeric(numSamples)
+  i <- 1
+  h <- f
+  while(2 * h < sampleRate) {
+    wave <- wave + sin(2 * pi * h * 1:numSamples / sampleRate) / i * (ampvar + (runif(1)*2-1) * amperror) * sin(2 * pi * (speedvar + (runif(1)*2-1) * speederror) * 1:numSamples / sampleRate)
+    i <- i + 1
+    h <- f * i
+  }
+  wave / max(abs(wave))
+}
+
+wave.weirdsaw3 <- function(numSamples=22050, sampleRate=44100, f=440, fampvar=0.1, fspeedvar=8, ampvar=0.35, amperror=0.15, speedvar=2, speederror=1) {
+  wave <- numeric(numSamples)
+  i <- 1
+  h <- f
+  while(2 * h < sampleRate) {
+    wave <- wave + wave.sinevibrato(numSamples=numSamples, sampleRate=sampleRate, f=h, amp=runif(1)*fampvar, speed=runif(1)*fspeedvar) / i * (ampvar + (runif(1)*2-1) * amperror) * sin(2 * pi * (speedvar + (runif(1)*2-1) * speederror) * 1:numSamples / sampleRate)
     i <- i + 1
     h <- f * i
   }
