@@ -7,7 +7,7 @@ tukeyWindow <- function(length, easing=floor(length/2)) {
   }, 0) }
 }
 
-bandMatrix <- function(soundwave, numBands=11, sampleRate=44100, windowLength=260, windowEasing=floor(windowLength/2), numWindows=NULL, normalize=FALSE) {
+spectrum <- function(soundwave, numBands=11, sampleRate=44100, windowLength=260, windowEasing=floor(windowLength/2), numWindows=NULL, normalize=FALSE) {
   soundwaveLength <- length(soundwave)
   window <- tukeyWindow(windowLength, windowEasing)
   if (is.null(numWindows)) {

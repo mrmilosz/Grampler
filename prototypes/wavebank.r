@@ -1,3 +1,5 @@
+source('wavemanip.r')
+
 # Waves are in R floating point format. Conversion methods (including to binary) in wavemanip.r.
 
 wave.fromWav <- function(path, ...) {

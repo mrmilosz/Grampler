@@ -1,7 +1,5 @@
-source('wavemanip.r')
 source('wavebank.r')
-source('bandmatrix.r')
-source('heatgraph.r')
+source('spectrum.r')
 
 sampleDirectory='DrumSamples'
 samplePaths <- list.files(sampleDirectory, pattern='wav$', recursive=TRUE)
@@ -16,7 +14,7 @@ computeDistanceMatrix <- function(numBands=11, windowLength=260, windowEasing=13
 
   bandMatrices <- list()
   for (i in 1:numSamples) {
-    bandMatrices[[i]] <- bandMatrix(
+    bandMatrices[[i]] <- spectrum(
       wave.fromWav(paste(sampleDirectory, samplePaths[i], sep='/'), numSamples=soundwaveLength),
       windowLength=windowLength, windowEasing=windowEasing, numBands=numBands, numWindows=numWindows,
       normalize=TRUE
