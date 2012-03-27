@@ -35,9 +35,9 @@ computeDistanceMatrix <- function(numBands=11, windowLength=260, windowEasing=13
   save(distances, file=distanceFilePath)
 }
 
-closestNeighbors <- function(path) {
+sortedNeighbors <- function(path, ...) {
   sampleDistances <- distances[which(samplePaths == path),]
-  vapply(sort(sampleDistances, index.return=TRUE)$ix, function(i) { c(samplePaths[i], sampleDistances[i]) }, c('', 0))
+  vapply(sort(sampleDistances, index.return=TRUE, ...)$ix, function(i) { c(samplePaths[i], sampleDistances[i]) }, c('', 0))
 }
 
 if (file.exists(distanceFilePath)) {

@@ -1,4 +1,5 @@
 source('spectrum.r')
+source('wavebank.r')
 
 oscillograph <- function(sounwave, sampleRate=44100) {
   par(mar=c(5, 5, 5, 5))
@@ -16,3 +17,11 @@ spectrograph <- function(soundwave, ...) {
   axis(2, at=0:length(ylabels)+0.5, labels=c(0,ylabels), las=1, cex.axis=0.7)
   title(main='spectrograph')
 }
+
+graphWav <- function(path, ...) {
+  soundwave <- wave.fromWav(path)
+  par(mfrow=c(2, 1))
+  oscillograph(soundwave)
+  spectrograph(soundwave, ...)
+}
+
