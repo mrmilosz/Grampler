@@ -11,12 +11,11 @@ wave.snare <- function(numSamples=22050) {
   waveFadeFactor <- 10
   waveMax <- max(abs(wave))
   if (waveMax > 0) { wave <- wave / waveMax }
-  wave <- wave * ((numSamples / waveFadeFactor) / (0:(numSamples - 1) + numSamples / waveFadeFactor)) * ((numSamples - 1):0 / numSamples)
-  wave
+  wave * ((numSamples / waveFadeFactor) / (0:(numSamples - 1) + numSamples / waveFadeFactor)) * ((numSamples - 1):0 / numSamples)
 }
 
 wave.sine <- function(numSamples=22050, f=440, sampleRate=44100) {
-  wave <- sin(2 * pi * f * 1:numSamples / sampleRate)
+  sin(2 * pi * f * 1:numSamples / sampleRate)
 }
 
 wave.sine.mod <- function(numSamples=22050, f=440, sampleRate=44100, pm=rep(0, numSamples), fm=rep(0, numSamples), rm=rep(1, numSamples)) {
