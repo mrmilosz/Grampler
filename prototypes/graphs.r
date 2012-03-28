@@ -1,7 +1,7 @@
 source('spectrum.r')
 source('wavebank.r')
 
-oscillograph <- function(sounwave, sampleRate=44100) {
+oscillograph <- function(soundwave, sampleRate=44100) {
   par(mar=c(5, 5, 5, 5))
   plot(round(1:length(soundwave) / sampleRate, 4), soundwave, type='l', las=1, xlab='time', ylab='voltage')
   title(main='oscillograph')

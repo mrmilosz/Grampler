@@ -3,7 +3,8 @@ source('spectrum.r')
 
 sampleDirectory='DrumSamples'
 samplePaths <- list.files(sampleDirectory, pattern='wav$', recursive=TRUE)
-distanceFilePath <- 'distances.dat'
+distanceFilePath <- 'cache.dat'
+distances <- NULL
 
 computeDistanceMatrix <- function(numBands=11, windowLength=260, windowEasing=130, numSamples=22050) {
   numWindows <- floor((numSamples - windowEasing) / (windowLength - windowEasing))
@@ -12,9 +13,9 @@ computeDistanceMatrix <- function(numBands=11, windowLength=260, windowEasing=13
   samplePaths <- list.files(sampleDirectory, pattern='wav$', recursive=TRUE)
   numSamples <- length(samplePaths)
 
-  bandMatrices <- list()
+  spectra <- list()
   for (i in 1:numSamples) {
-    bandMatrices[[i]] <- spectrum(
+    spectra[[i]] <- spectrum(
       wave.fromWav(paste(sampleDirectory, samplePaths[i], sep='/'), numSamples=soundwaveLength),
       windowLength=windowLength, windowEasing=windowEasing, numBands=numBands, numWindows=numWindows,
       normalize=TRUE
@@ -27,7 +28,7 @@ computeDistanceMatrix <- function(numBands=11, windowLength=260, windowEasing=13
   print('Comparing and sorting...')
   for (i in 1:numSamples) {
     for (j in 1:numSamples) {
-      distances[i,j] <- sqrt(sum((bandMatrices[[i]]$energies - bandMatrices[[j]]$energies)^2) / numSamples)
+      distances[i,j] <- sqrt(mean((spectra[[i]]$energies - spectra[[j]]$energies)^2))
     }
   }
   print('Database is ready!')
@@ -35,9 +36,12 @@ computeDistanceMatrix <- function(numBands=11, windowLength=260, windowEasing=13
   save(distances, file=distanceFilePath)
 }
 
-sortedNeighbors <- function(path, ...) {
+sortedNeighbors <- function(path, amount=NULL, ...) {
+  if (is.null(amount)) {
+    amount=length(samplePaths)
+  }
   sampleDistances <- distances[which(samplePaths == path),]
-  vapply(sort(sampleDistances, index.return=TRUE, ...)$ix, function(i) { c(samplePaths[i], sampleDistances[i]) }, c('', 0))
+  t(vapply(sort(sampleDistances, index.return=TRUE, ...)$ix, function(i) { c(samplePaths[i], sampleDistances[i]) }, c('', 0))[,1:amount])
 }
 
 if (file.exists(distanceFilePath)) {
@@ -45,4 +49,3 @@ if (file.exists(distanceFilePath)) {
 } else {
   computeDistanceMatrix()
 }
-

@@ -42,7 +42,7 @@ spectrum <- function(soundwave, numBands=11, sampleRate=44100, windowLength=260,
     }
 
     if (normalize) {
-      bandEnergies[i,l] <- bandEnergies[i,l] / max(bandEnergies[i,l])
+      bandEnergies[i,l] <- bandEnergies[i,l] / mean(bandEnergies[i,l])
     }
 
     pos <- pos + windowLength - windowEasing
