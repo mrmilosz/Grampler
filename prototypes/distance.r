@@ -1,5 +1,6 @@
 source('wavebank.r')
 source('spectrum.r')
+source('graphs.r')
 
 sampleDirectory='DrumSamples'
 samplePaths <- list.files(sampleDirectory, pattern='wav$', recursive=TRUE)
@@ -30,9 +31,8 @@ computeDistanceMatrix <- function(numBands=11, windowLength=260, windowEasing=13
 
   print('Comparing and sorting...')
   for (i in 1:numSamples) {
-    sumIEnergies <- sum(spectra[[i]]$energies)
     for (j in 1:numSamples) {
-      distances[i,j] <- sqrt(mean((spectra[[i]]$energies - spectra[[j]]$energies)^2)) / (sumIEnergies + sum(spectra[[j]]$energies))
+      distances[i,j] <- sqrt(mean((spectra[[i]]$energies - spectra[[j]]$energies)^2))
     }
   }
   print('Database is ready!')
@@ -65,4 +65,5 @@ if (file.exists(distanceFilePath)) {
   load(distanceFilePath)
 } else {
   computeDistanceMatrix()
+  load(distanceFilePath)
 }
