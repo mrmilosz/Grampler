@@ -1,5 +1,10 @@
 #
-# Convenience methods
+# A bunch of painstakingly written crap for dealing with WAVE files!
+#
+
+
+#
+# Convenience methods for reading and writing wave files directly to and from R float format.
 #
 
 readToFloat <- function(path, ...) {

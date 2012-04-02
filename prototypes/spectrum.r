@@ -1,3 +1,5 @@
+# Flat top window with cosine tails of length given by parameter "easing".
+# Tail length cannot exceed half of window length because that's impossible!
 tukeyWindow <- function(length, easing=floor(length/2)) {
   if (length < 1 || easing < 0 || length < 2 * easing) { NULL }
   else { vapply(0:(length - 1), function(t) {
@@ -7,6 +9,8 @@ tukeyWindow <- function(length, easing=floor(length/2)) {
   }, 0) }
 }
 
+# Computes a spectral matrix (energy as a function of time and logarithm of frequency) for a given sample.
+# Uses the tukey window above to smooth window ends to avoid aliasing.
 spectrum <- function(soundwave, numBands=11, sampleRate=44100, windowLength=260, windowEasing=floor(windowLength/2), numWindows=NULL, normalize=FALSE) {
   soundwaveLength <- length(soundwave)
   window <- tukeyWindow(windowLength, windowEasing)
